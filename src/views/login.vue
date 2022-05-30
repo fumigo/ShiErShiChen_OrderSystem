@@ -50,9 +50,9 @@
             login() {
                 const self = this;
                 if (self.form.useremail != "" && self.form.userpwd != "") {
-                    self.$axios({
+                    self.axios({
                         method:'post',
-                        url: 'employee/login',
+                        url: 'http://192.168.17.1:9090/changAn/employee/login',
                         data: {
                             email: self.form.useremail,
                             password: self.form.userpwd
