@@ -1,4 +1,5 @@
 <template>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <div class="login-register">
         <div class="contain">
             <div class="big-box" :class="{active:isLogin}">
@@ -52,21 +53,23 @@
                 if (self.form.useremail != "" && self.form.userpwd != "") {
                     self.axios({
                         method:'post',
-                        url: 'http://192.168.17.1:9090/changAn/employee/login',
+                        dataType:'JSONP',
+                        url: 'http://192.168.109.254:9090/changAn/employee/login',
+                        // url: 'url: \'http://192.168.109.254:9090/changAn/employee/login\',',
                         data: {
                             email: self.form.useremail,
                             password: self.form.userpwd
                         }
                     })
                         .then( res => {
-                            switch(res.data){
-                                case 0:
-                                    alert("登陆成功！");
+                            switch(res.data.code){
+                                case 1:
+                                    alert("登录成功！");
                                     break;
                                 case -1:
                                     this.emailError = true;
                                     break;
-                                case 1:
+                                case 0:
                                     this.passwordError = true;
                                     break;
                             }
