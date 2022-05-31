@@ -5,11 +5,11 @@
             <div class="big-box" :class="{active:isLogin}">
                 <div class="big-contain" >
                     <div class="btitle">账户登录</div>
-                    <div class="bform">
-                        <input type="email" placeholder="邮箱" v-model="form.useremail">
-                        <span class="errTips" v-if="emailError">* 邮箱填写错误 *</span>
-                        <input type="password" placeholder="密码" v-model="form.userpwd">
-                        <span class="errTips" v-if="emailError">* 密码填写错误 *</span>
+                    <div class="bform" :model="form">
+                        <input type="username" placeholder="账号" v-model="form.username">
+                        <span class="errTips" v-if="nameError">* 用户名填写错误 *</span>
+                        <input type="password" placeholder="密码" v-model="form.password">
+                        <span class="errTips" v-if="passwordError">* 密码填写错误 *</span>
                     </div>
                     <button class="bbutton" @click="login">登录</button>
                 </div>
@@ -18,7 +18,7 @@
                 <div class="small-contain">
                     <div class="stitle">欢迎回来!</div>
                     <p class="scontent">与我们保持联系，请登录你的账户</p>
-                    <button class="sbutton" @click="changeType">登录</button>
+                    <button class="sbutton">登录</button>
                 </div>
             </div>
         </div>
@@ -26,60 +26,88 @@
 </template>
 
 <script>
+    import request from "../../utils/request";
+
     export default{
         name:'login',
         data(){
             return {
                 isLogin:false,
-                emailError: false,
+                nameError: false,
                 passwordError: false,
                 existed: false,
                 form:{
                     username:'',
-                    useremail:'',
-                    userpwd:''
+                    password:''
                 }
             }
         },
         methods:{
-            changeType() {
-                this.isLogin = !this.isLogin
-                this.form.username = ''
-                this.form.useremail = ''
-                this.form.userpwd = ''
-            },
             login() {
-                const self = this;
-                if (self.form.useremail != "" && self.form.userpwd != "") {
-                    self.axios({
-                        method:'post',
-                        dataType:'JSONP',
-                        url: 'http://192.168.109.254:9090/changAn/employee/login',
-                        // url: 'url: \'http://192.168.109.254:9090/changAn/employee/login\',',
-                        data: {
-                            email: self.form.useremail,
-                            password: self.form.userpwd
-                        }
+                // const self = this;
+                // if (self.form.username != "" && self.form.userpwd != "") {
+                //     self.axios({
+                //         method:'post',
+                //         url: '/changAn/employee/login',
+                //         data: {
+                //             email: self.form.username,
+                //             password: self.form.userpwd
+                //         }
+                //     })
+                //         .then( res => {
+                //             switch(res.data.code){
+                //                 case 1:
+                //                     alert("登陆成功！");
+                //                     sessionStorage.setItem("user",JSON.stringify(username))
+                //                     this.$router.push({ path:'/Employee'})
+                //                 case -1:
+                //                     this.nameError = true;
+                //                     break;
+                //                 case 0:
+                //                     this.passwordError = true;
+                //                     break;
+                //             }
+
+
+                request.post("/changAn/employee/login",this.form).then(res => {
+                    if (res.code === 1){
+                        // alert("hh")
+                        this.$message({
+                            type:'success',
+                            message:"successful login"
+                        })
+                        this.$router.push({path: '/employee'})  //页面跳转
+                    }else{
+                        this.$message({
+                            type:'error',
+                            message:res.msg
                     })
-                        .then( res => {
-                            switch(res.data.code){
-                                case 1:
-                                    alert("登录成功！");
-                                    break;
-                                case -1:
-                                    this.emailError = true;
-                                    break;
-                                case 0:
-                                    this.passwordError = true;
-                                    break;
-                            }
-                        })
-                        .catch( err => {
-                            console.log(err);
-                        })
-                } else{
-                    alert("填写不能为空！");
-                }
+                    }
+                })
+                            // this.logging = false
+                            // let {msg,code,data} = data
+                            // if (code != 200){
+                            //     this.$message({
+                            //         message : msg,
+                            //         type:error
+                            //     })
+                            // }else{
+                            //     if(self.data.code=1){
+                            //         sessionStorage.setItem("user",JSON.stringify(user))
+                            //         this.$router.push({ path:'/Employee'})
+                            //     }else if (user.type ==='advert'){
+                            //         sessionStorage.setItem("user",JSON.stringify(user))
+                            //         this.$router.push({ path:'/Dish'})
+                            //     }
+                            // }
+            //             })
+            //             .catch( err => {
+            //                 console.log(err);
+            //                 // console.log("登录失败")
+            //             })
+            //     } else{
+            //         alert("填写不能为空！");
+            //     }
             }
         }
     }

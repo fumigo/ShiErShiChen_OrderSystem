@@ -5,7 +5,7 @@
         <div style="width: 140px;background-color:#496C66;" >
             <el-dropdown style="padding-top: 17px;padding-right: 40px">
             <span class="el-dropdown-link" style="color: #FFFFFF">
-              小李
+                小李
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -23,8 +23,12 @@
 </template>
 
 <script>
+
     export default {
-        name: "Header.vue"
+        name: "Header.vue",
+        // data(){
+        //     username:"小李"
+        // }
     }
 </script>
 
