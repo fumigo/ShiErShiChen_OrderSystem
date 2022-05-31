@@ -14,7 +14,7 @@
                     <el-dropdown-menu>
                         <el-dropdown-item style="--el-dropdown-menuItem-hover-color: #496C66;">个人信息</el-dropdown-item>
                         <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 ">更换主题</el-dropdown-item>
-                        <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 " divided>退出</el-dropdown-item>
+                        <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 " @click="exit" >退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -24,11 +24,32 @@
 
 <script>
 
+    import request from "../../utils/request";
+
     export default {
         name: "Header.vue",
         // data(){
         //     username:"小李"
         // }
+        method:{
+            exit(){
+                axios.post("/changAn/employee/exit").then(res => {
+                    if (res.code === 1){
+                        this.$message({
+                            type:'success',
+                            message:"successful exit"
+                        })
+                        this.$router.push({path: '/login'})  //页面跳转
+                    }else{
+                        this.$message({
+                            type:'error',
+                            message:res.msg
+                        })
+                    }
+                })
+            }
+    }
+
     }
 </script>
 

@@ -28,86 +28,80 @@
 <script>
     import request from "../../utils/request";
 
-    export default{
-        name:'login',
-        data(){
+    export default {
+        name: 'login',
+        data() {
             return {
-                isLogin:false,
+                isLogin: false,
                 nameError: false,
                 passwordError: false,
                 existed: false,
-                form:{
-                    username:'',
-                    password:''
+                form: {
+                    username: '',
+                    password: ''
                 }
             }
         },
-        methods:{
+        methods: {
             login() {
-                // const self = this;
-                // if (self.form.username != "" && self.form.userpwd != "") {
-                //     self.axios({
-                //         method:'post',
-                //         url: '/changAn/employee/login',
-                //         data: {
-                //             email: self.form.username,
-                //             password: self.form.userpwd
-                //         }
-                //     })
-                //         .then( res => {
-                //             switch(res.data.code){
-                //                 case 1:
-                //                     alert("登陆成功！");
-                //                     sessionStorage.setItem("user",JSON.stringify(username))
-                //                     this.$router.push({ path:'/Employee'})
-                //                 case -1:
-                //                     this.nameError = true;
-                //                     break;
-                //                 case 0:
-                //                     this.passwordError = true;
-                //                     break;
-                //             }
+                //用户名：4~8，字母，数字
+                //密码：字母数字下划线，不少于6位
+                function isusn(str) {
+                    var reg = /^(?![0-9]+$(?![a-zA-Z]+$)[0-9a-zA-Z]{2,8}$)/
+                    return reg.test(str)
+                }
 
+                function ispwd(str) {
+                    var reg=/^[\w+$]{6,}/
+                    // var reg = /=.*([a-zA-Z].*)(?=.*[0-9].*)[a-zA-Z0-9-*/+.~.!@#$%^&*()]{6,}$/
+                    return reg.test(str)
+                }
 
-                request.post("/changAn/employee/login",this.form).then(res => {
-                    if (res.code === 1){
-                        // alert("hh")
-                        this.$message({
-                            type:'success',
-                            message:"successful login"
+                if (this.form.username != "" && this.form.password != "") {
+                    if (isusn(this.form.username)  && ispwd(this.form.password)) {
+                        request.post("/changAn/employee/login", this.form).then(res => {
+                            if (res.code === 1) {
+                                // alert("hh")
+                                this.$message({
+                                    type: 'success',
+                                    message: "successful login"
+                                })
+                                this.$router.push({path: '/employee'})  //页面跳转
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: res.msg
+                                })
+                            }
                         })
-                        this.$router.push({path: '/employee'})  //页面跳转
-                    }else{
-                        this.$message({
-                            type:'error',
-                            message:res.msg
-                    })
+
+                        // this.logging = false
+                        // let {msg,code,data} = data
+                        // if (code != 200){
+                        //     this.$message({
+                        //         message : msg,
+                        //         type:error
+                        //     })
+                        // }else{
+                        //     if(self.data.code=1){
+                        //         sessionStorage.setItem("user",JSON.stringify(user))
+                        //         this.$router.push({ path:'/Employee'})
+                        //     }else if (user.type ==='advert'){
+                        //         sessionStorage.setItem("user",JSON.stringify(user))
+                        //         this.$router.push({ path:'/Dish'})
+                        //     }
+                        // }
+                        //             })
+                        //             .catch( err => {
+                        //                 console.log(err);
+                        //                 // console.log("登录失败")
+                        //             })
+                    } else {
+                        alert("请准确填写\n用户名：2~8位字母数字\n密码：6~12位，由字母数字下划线组成");
                     }
-                })
-                            // this.logging = false
-                            // let {msg,code,data} = data
-                            // if (code != 200){
-                            //     this.$message({
-                            //         message : msg,
-                            //         type:error
-                            //     })
-                            // }else{
-                            //     if(self.data.code=1){
-                            //         sessionStorage.setItem("user",JSON.stringify(user))
-                            //         this.$router.push({ path:'/Employee'})
-                            //     }else if (user.type ==='advert'){
-                            //         sessionStorage.setItem("user",JSON.stringify(user))
-                            //         this.$router.push({ path:'/Dish'})
-                            //     }
-                            // }
-            //             })
-            //             .catch( err => {
-            //                 console.log(err);
-            //                 // console.log("登录失败")
-            //             })
-            //     } else{
-            //         alert("填写不能为空！");
-            //     }
+                }else{
+                    alert("用户名和密码不能为空")
+                }
             }
         }
     }
