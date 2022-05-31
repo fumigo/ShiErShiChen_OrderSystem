@@ -8,9 +8,9 @@ const routes = [
     component: layout,
     children:[
       {
-        path: '/HomeView',
-        name: 'HomeView',
-        component: () => import( '../views/HomeView.vue')
+        path: '/employee',
+        name: 'Employee',
+        component: () => import( '../views/Employee')
       }
     ]
   },
