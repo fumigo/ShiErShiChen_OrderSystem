@@ -32,7 +32,6 @@
         <div style="margin: 10px 0">
             <el-pagination
                     v-model:currentPage="currentPage"
-                    v-model:page-size="pageSize4"
                     :page-sizes="[5, 10, 15, 20]"
                     :small="small"
                     :disabled="disabled"
@@ -108,7 +107,7 @@
             },
             //点击对话框的确认按钮将数据传到后台
             save(){
-                request.post('http://localhost:53000/Employee',this.form).then(res=>{
+                request.post('/Employee',this.form).then(res=>{
                     console.log(res.data);
                 });
                 this.dialogFormVisible=false;

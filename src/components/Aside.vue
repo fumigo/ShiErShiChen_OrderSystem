@@ -13,36 +13,34 @@
                     @close="handleClose"
             >
                 <el-menu-item index="1">
-                    <span class="iconfont">&#xe613;</span>
-                    <template #title>放映厅管理</template>
+                    <span class="iconfont">&#xe897;</span>
+                    <template #title>订单明细</template>
                 </el-menu-item>
                 <el-menu-item index="3">
-                    <span class="iconfont">&#xe937;</span>
-                    <template #title>座位管理</template>
+                    <span class="iconfont">&#xf00a6;</span>
+                    <template #title>分类管理</template>
                 </el-menu-item>
                 <el-menu-item index="4">
-                    <span class="iconfont">&#xe60a;</span>
-                    <template #title>影片管理</template>
+                    <span class="iconfont">&#xe601;</span>
+                    <template #title>菜品管理</template>
                 </el-menu-item>
                 <el-menu-item index="5">
                     <span class="iconfont">&#xf00e0;</span>
-                    <template #title>演出计划管理</template>
+                    <template #title>套餐管理</template>
                 </el-menu-item>
                 <el-menu-item index="6">
-                    <span class="iconfont">&#xe6a5;</span>
-                    <template #title>用户管理</template>
+                    <span class="iconfont">&#xe72e;</span>
+                    <template #title>员工管理</template>
                 </el-menu-item>
                 <el-menu-item index="7">
-                    <span class="iconfont">&#xe897;</span>
-                    <template #title>订单管理</template>
+                    <span class="iconfont">&#xe6a5;</span>
+                    <template #title>顾客管理</template>
                 </el-menu-item>
                 <el-menu-item index="8">
-                    <span class="iconfont">&#xe626;</span>
-                    <template #title>票房统计</template>
+
                 </el-menu-item>
                 <el-menu-item index="8">
-                    <span class="iconfont">&#xe626;</span>
-                    <template #title>票房统计</template>
+
                 </el-menu-item>
                 <el-menu-item index="8">
 
