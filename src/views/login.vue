@@ -27,7 +27,6 @@
 
 <script>
     import request from "../../utils/request";
-
     export default {
         name: 'login',
         data() {
@@ -50,13 +49,11 @@
                     var reg = /^(?![0-9]+$(?![a-zA-Z]+$)[0-9a-zA-Z]{2,8}$)/
                     return reg.test(str)
                 }
-
                 function ispwd(str) {
                     var reg=/^[\w+$]{6,}/
                     // var reg = /=.*([a-zA-Z].*)(?=.*[0-9].*)[a-zA-Z0-9-*/+.~.!@#$%^&*()]{6,}$/
                     return reg.test(str)
                 }
-
                 if (this.form.username != "" && this.form.password != "") {
                     if (isusn(this.form.username)  && ispwd(this.form.password)) {
                         request.post("/changAn/employee/login", this.form).then(res => {
@@ -74,7 +71,6 @@
                                 })
                             }
                         })
-
                         // this.logging = false
                         // let {msg,code,data} = data
                         // if (code != 200){
