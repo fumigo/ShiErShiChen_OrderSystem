@@ -14,10 +14,10 @@ request.interceptors.request.use(config => {
 
     // config.headers['token'] = user.token;  // 设置请求头
     //取出localStorage里边缓存的用户信息
-    let userJson=localStorage.getItem('userInfo');
-    if(!userJson){
-        router.push("/login");
-    }
+    // let userJson=localStorage.getItem('userInfo');
+    // if(!userJson){
+    //     this.$router.push("/login");
+    // }
     return config
 }, error => {
     return Promise.reject(error)

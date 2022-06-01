@@ -5,7 +5,7 @@
         <div style="width: 140px;background-color:#496C66;" >
             <el-dropdown style="padding-top: 17px;padding-right: 40px">
             <span class="el-dropdown-link" style="color: #FFFFFF">
-                {{user_name}}
+                {{userName}}
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -30,33 +30,42 @@
     export default {
         name: "Header.vue",
         data(){
-            user_name:''
+            return{
+                userName:"未登录"
+            }
         },
         created() {
-            userInfoLoad();
+            //未登录就跳转到登录页，否则就执行加载
+            if(!localStorage.getItem('userInfo')){
+                this.$router.push('/login');
+            }else{
+                this.load();
+            }
         },
-        method:{
+        methods:{
             exit(){
                 //退出登录时清空本地缓存中的用户信息
                 localStorage.clear();
-                axios.post("/changAn/employee/exit").then(res => {
-                    if (res.code === 1){
-                        this.$message({
-                            type:'success',
-                            message:"successful exit"
-                        })
-                        this.$router.push({path: '/login'})  //页面跳转
-                    }else{
-                        this.$message({
-                            type:'error',
-                            message:res.msg
-                        })
-                    }
-                })
+                this.userName="未登录";
+                // axios.post("/changAn/employee/exit").then(res => {
+                //     if (res.code === 1){
+                //         this.$message({
+                //             type:'success',
+                //             message:"successful exit"
+                //         })
+                //         this.$router.push({path: '/login'})  //页面跳转
+                //     }else{
+                //         this.$message({
+                //             type:'error',
+                //             message:res.msg
+                //         })
+                //     }
+                // })
+                this.$router.push('/login');
             },
-            userInfoLoad(){
+           load(){
                 //成功登录后在头部显示用户名
-                this.user_name=localStorage.getItem('userInfo').username;
+                this.userName=JSON.parse(localStorage.getItem('userInfo')).username;
             }
     }
 

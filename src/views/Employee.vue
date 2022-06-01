@@ -140,7 +140,10 @@
             }
         },
         created() {
-            if(localStorage.getItem('userInfo').role=='店长'){
+            if(!localStorage.getItem('userInfo')){
+                this.$router.push('/login');
+            }
+            if(JSON.parse(localStorage.getItem('userInfo')).role=='店长'){
                 this.isShow=true;
             }
             this.load();
