@@ -11,7 +11,11 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import axios from 'axios'
 import VueAxios from "vue-axios";
 
+axios.defaults.withCredentials = true;
+// Vue.prototype.$axios = axios
+
 const app = createApp(App)
+
 app.use(store)
 app.use(router)
 app.use(ElementPlus,{
@@ -20,6 +24,6 @@ app.use(ElementPlus,{
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
-app.mount('#app')
 app.use(VueAxios,axios)
+app.mount('#app')
 // createApp(App).use(store).use(router).use(ElementPlus).use(ElementPlusIconsVue).mount('#app')
