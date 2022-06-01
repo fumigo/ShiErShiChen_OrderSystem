@@ -11,6 +11,26 @@ const routes = [
         path: '/employee',
         name: 'Employee',
         component: () => import( '../views/Employee')
+      },
+      {
+        path: '/order',
+        name: 'Order',
+        component: () => import( '../views/Order')
+      },
+      {
+        path: '/food',
+        name: 'Food',
+        component: () => import( '../views/Food')
+      },
+      {
+        path: '/classification',
+        name: 'Classification',
+        component: () => import( '../views/Classification')
+      },
+      {
+        path: '/package',
+        name: 'Package',
+        component: () => import( '../views/Package')
       }
     ]
   },

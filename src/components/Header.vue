@@ -5,7 +5,7 @@
         <div style="width: 140px;background-color:#496C66;" >
             <el-dropdown style="padding-top: 17px;padding-right: 40px">
             <span class="el-dropdown-link" style="color: #FFFFFF">
-                小李
+                {{user_name}}
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>
@@ -14,7 +14,7 @@
                     <el-dropdown-menu>
                         <el-dropdown-item style="--el-dropdown-menuItem-hover-color: #496C66;">个人信息</el-dropdown-item>
                         <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 ">更换主题</el-dropdown-item>
-                        <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 " @click="exit" >退出登录</el-dropdown-item>
+                        <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 " @click="exit()" >退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -26,13 +26,19 @@
 
     import request from "../../utils/request";
 
+
     export default {
         name: "Header.vue",
-        // data(){
-        //     username:"小李"
-        // }
+        data(){
+            user_name:''
+        },
+        created() {
+            userInfoLoad();
+        },
         method:{
             exit(){
+                //退出登录时清空本地缓存中的用户信息
+                localStorage.clear();
                 axios.post("/changAn/employee/exit").then(res => {
                     if (res.code === 1){
                         this.$message({
@@ -47,6 +53,10 @@
                         })
                     }
                 })
+            },
+            userInfoLoad(){
+                //成功登录后在头部显示用户名
+                this.user_name=localStorage.getItem('userInfo').username;
             }
     }
 

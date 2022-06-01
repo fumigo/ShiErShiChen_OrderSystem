@@ -137,14 +137,10 @@
                 Useform:{},
                 tableData :[
                    ],
-                role1:'店长',
             }
         },
         created() {
-            // if(localStorage.getItem('userInfo').role=='店长'){
-            //     this.isShow=true;
-            // }
-            if(this.role1=='店长'){
+            if(localStorage.getItem('userInfo').role=='店长'){
                 this.isShow=true;
             }
             this.load();
