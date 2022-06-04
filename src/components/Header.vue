@@ -12,7 +12,7 @@
             </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item style="--el-dropdown-menuItem-hover-color: #496C66;">个人信息</el-dropdown-item>
+                        <el-dropdown-item style="--el-dropdown-menuItem-hover-color: #496C66;" @click="$router.push('/managerperson')">个人信息</el-dropdown-item>
                         <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 ">更换主题</el-dropdown-item>
                         <el-dropdown-item style="--el-dropdown-menuItem-hover-color:#496C66 " @click="exit()" >退出登录</el-dropdown-item>
                     </el-dropdown-menu>
@@ -37,7 +37,7 @@
         created() {
             //未登录就跳转到登录页，否则就执行加载
             if(!localStorage.getItem('userInfo')){
-                this.$router.push('/login');
+                // this.$router.push('/login');
             }else{
                 this.load();
             }
