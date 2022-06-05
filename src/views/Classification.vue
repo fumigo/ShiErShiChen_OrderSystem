@@ -3,12 +3,12 @@
         <div style="width: 990px;margin-left: 120px;padding: 10px">
             <!--        功能区-->
             <div style="margin: 10px 0">
-                <el-button  color="#71A4A3" bg="false"  style="color: #FFFFFF" @click="add()">新增</el-button>
+                <el-button color="#71A4A3" bg="false" style="color: #ffffff" @click="add()">新增</el-button>
             </div>
             <!--        表格-->
             <el-table :data="tableTypeData"  :default-sort="{ prop: '', order: 'ascending' }"  border style="width: 100%">
-                <el-table-column prop="id" label="ID"  width="170" />
-                <el-table-column prop="name" label="分类名称" width="150" />
+                <el-table-column prop="id" v-show="false" label="ID"  width="170" />
+                <el-table-column prop="name" label="菜品名称" width="150" />
                 <el-table-column prop="type" label="分类类型" width="150" />
                 <el-table-column prop="updateTime"  label="操作时间" width="180" />
                 <el-table-column prop="sort" label="排序" width="70" />
