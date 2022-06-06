@@ -1,28 +1,29 @@
 <template>
     <div class="cartcontrol">
         <transition name="move">
-            <div class="iconfont icon-remove_circle_outline" v-if="food.count" @click.stop="updateFoodCount(false)"/>
+            <div class="iconfont icon-remove_circle_outline" v-if="food.count" @click.stop="updateFoodCount(false)"></div>
         </transition>
         <div class="cart-count" v-if="food.count">{{food.count}}</div>
-        <div class="iconfont icon-add_circle" @click.stop="updateFoodCount(true)" />
+        <div class="iconfont icon-add_circle" @click.stop="updateFoodCount(true)"></div>
     </div>
 </template>
 
-<script type='es6'>
+<script>
     export default {
         props: {
             food: Object
         },
+
         methods: {
-            updateFoodCount (isPlus) {
-                this.$store.dispatch('updateFoodCount', {isPlus, food: this.food})
+            updateFoodCount (isAdd) {
+                this.$store.dispatch('updateFoodCount', {isAdd, food: this.food})
             }
         }
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-    /*@import "../../common/stylus/mixins.styl"*/
+    @import "../assets/stylus/mixins.styl"
     .cartcontrol
         font-size: 0
         .cart-decrease
@@ -38,11 +39,11 @@
             line-height 24px
             font-size 24px
             color $green
-            &.move-enter-active,&.move-leave-active
-                transition all 0.5s
-            &.move-enter,&.move-leave-to
-                transform translateX(15px) rotate(360deg)
+            &.move-enter-active, &.move-leave-active
+                transition all .3s
+            &.move-enter, &.move-leave-to
                 opacity 0
+                transform translateX(15px) rotate(180deg)
         .cart-count
             display: inline-block
             vertical-align: top

@@ -3,14 +3,14 @@
         <router-link class="header_search" slot="left" to="/search">
             <i class="iconfont icon-sousuo"></i>
         </router-link>
-<!--        <router-link class="header_login" slot="right" :to="userInfo._id ? '/userinfo': '/login'">-->
-<!--        <span class="header_login_text" v-if="!userInfo._id">-->
+        <router-link class="header_login" slot="right" :to="userInfo._id ? '/userinfo': '/login'">
+        <span class="header_login_text" v-if="!userInfo._id">
           登录|注册
-<!--        </span>-->
+        </span>
             <span class="header_login_text" >
            <i class="iconfont icon-person"></i>
         </span>
-<!--        </router-link>-->
+        </router-link>
     </HeaderTop>
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" style="max-height: 27vh">
         <van-swipe-item><img style="width: 100%;max-height: 27vh" src="../assets/image/daily/daily1.jpg"></van-swipe-item>

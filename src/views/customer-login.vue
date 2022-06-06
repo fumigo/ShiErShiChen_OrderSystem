@@ -1,500 +1,324 @@
 <template>
-<!--    <div class="login-register">-->
-<!--    <el-row :gutter="10" >-->
-<!--        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1"-->
-<!--        >欢迎使用!</el-col>-->
-<!--    </el-row>-->
-<!--    <el-row :gutter="10" >-->
-<!--        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1">-->
-<!--            <el-input  v-model="form.username" placeholder="请输入用户名" clearable/>-->
-<!--            <span class="errTips" v-if="nameError">* 用户名填写错误 *</span>-->
-<!--        </el-col>-->
-<!--    </el-row>-->
-<!--    <el-row :gutter="10" >-->
-<!--        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1">-->
-<!--            <el-input-->
-<!--                    v-model="form.password"-->
-<!--                    type="password"-->
-<!--                    placeholder="请输入密码"-->
-<!--                    show-password-->
-<!--            />-->
-<!--            <span class="errTips" v-if="passwordError">* 密码填写错误 *</span>-->
-<!--        </el-col>-->
-<!--    </el-row>-->
-<!--    <el-row :gutter="10" >-->
-<!--        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1">-->
-<!--&lt;!&ndash;            <el-button type="primary" @click="submitForm(formRef)">登录</el-button>&ndash;&gt;-->
-<!--            <button class="bbutton" @click="login">登录</button>-->
-<!--        </el-col>-->
-<!--    </el-row>-->
-<!--    </div>-->
-    <div class="login-register">
-        <div class="contain">
-            <div class="big-box" :class="{active:isLogin}">
-                <div class="big-contain" v-show="isLogin">
-                    <div class="btitle">账户登录</div>
-                    <div class="bform" :model="form">
-                        <input type="username" placeholder="账号" v-model="form.username">
-                        <span class="errTips" v-if="nameError">* 用户名填写错误 *</span>
-                        <input type="password" placeholder="密码" v-model="form.password">
-                        <span class="errTips" v-if="passwordError">* 密码填写错误 *</span>
-                    </div>
-                    <button class="bbutton" @click="login">登录</button>
-                    <button class="ffont" @click="changeType">没有账号去注册</button>
-                </div>
-                <div class="big-contain" v-show="!isLogin">
-                    <div class="btitle">创建账户</div>
-                    <div class="bform">
-                        <input type="text" placeholder="用户名" v-model="form.username">
-                        <span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
-                        <input type="email" placeholder="邮箱" v-model="form.username">
-                        <input type="password" placeholder="密码" v-model="form.password">
-                    </div>
-                    <button class="bbutton" @click="register">注册</button>
-                    <button class="ffont" @click="changeType">已有账号去登录</button>
+    <section class="loginContainer">
+        <div class="loginInner">
+            <div class="login_header">
+                <h2 class="login_logo">长安十二时辰</h2>
+                <div class="login_header_title">
+                    <a href="javascript:;" :class="{on: loginWay}" @click="loginWay=true">短信登录</a>
+                    <a href="javascript:;" :class="{on: !loginWay}" @click="loginWay=false">密码登录</a>
                 </div>
             </div>
+            <div class="login_content">
+                <form @submit.prevent="login">
+                    <div :class="{on: loginWay}">
+                        <section class="login_message">
+                            <input type="tel" maxlength="100" placeholder="邮箱" v-model="mail">
+                            <button :disabled="!rightPhone" class="get_verification"
+                                    :class="{right_phone: rightPhone}" @click.prevent="getCode">
+                                {{computeTime>0 ? `已发送(${computeTime}s)` : '获取验证码'}}
+                            </button>
+                        </section>
+                        <section class="login_verification">
+                            <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
+                        </section>
+                        <section class="login_hint">
+                            温馨提示：未注册外卖帐号的邮箱号，登录时将自动注册，且代表已同意
+                            <a href="javascript:;">《用户服务协议》</a>
+                        </section>
+                    </div>
+                    <div :class="{on: !loginWay}">
+                        <section>
+                            <section class="login_message">
+                                <input type="text" maxlength="100" placeholder="邮箱" v-model="mail">
+                            </section>
+                            <section class="login_verification">
+                                <input type="text" maxlength="50" placeholder="密码" v-if="showPwd" v-model="password">
+                                <input type="password" maxlength="50" placeholder="密码" v-else v-model="password">
+                                <div class="switch_button" :class="showPwd?'on':'off'" @click="showPwd=!showPwd">
+                                    <div class="switch_circle" :class="{right: showPwd}"></div>
+                                    <span class="switch_text">{{showPwd ? 'abc' : '...'}}</span>
+                                </div>
+                            </section>
+<!--                            <section class="login_message">-->
+<!--                                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">-->
+<!--                                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"-->
+<!--                                     @click="getCaptcha" ref="captcha">-->
+<!--                            </section>-->
+                        </section>
+                    </div>
+                    <button class="login_submit">登录</button>
+                </form>
+                <a href="javascript:;" class="about_us">关于我们</a>
+            </div>
+            <a href="javascript:" class="go_back" @click="$router.back()">
+                <i class="iconfont icon-jiantou2"></i>
+            </a>
         </div>
-    </div>
+
+        <AlertTip :alertText="alertText" v-show="alertShow" @closeTip="closeTip"/>
+    </section>
 </template>
 
-
 <script>
-    // import { ref } from 'vue'
-    // import { reactive, ref } from 'vue'
-    // import type { FormInstance } from 'element-plus'
-    import request from "../../utils/request";
-
+    import AlertTip from '../components/AlertTip'
+    import {reqSendCode, reqSmsLogin, reqPwdLogin} from '../api'
     export default {
-        name: "customer-login",
-        data() {
+        data () {
             return {
-                isLogin: false,
-                nameError: false,
-                passwordError: false,
-                existed: false,
-                form: {
-                    username: '',
-                    password: ''
-                }
+                loginWay: false, // true代表短信登陆, false代表密码
+                computeTime: 0, // 计时的时间
+                showPwd: false, // 是否显示密码
+                mail: '', // 邮箱
+                code:'', // 短信验证码
+                password: '', // 密码
+                alertText: '', // 提示文本
+                alertShow: false, // 是否显示警告框
             }
         },
+
+        computed: {
+            rightPhone () {
+                return /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,4}$/.test(this.mail)
+            }
+        },
+
         methods: {
-            changeType() {
-                this.isLogin = !this.isLogin
-                this.form.username = ''
-                this.form.useremail = ''
-                this.form.userpwd = ''
-            },
-            login() {
-                //用户名：4~8，字母，数字
-                //密码：字母数字下划线，不少于6位
-                function isusn(str) {
-                    var reg = /^(?![0-9]+$(?![a-zA-Z]+$)[0-9a-zA-Z]{2,8}$)/
-                    return reg.test(str)
-                }
+            // 异步获取短信验证码
+            async getCode () {
+                // 如果当前没有计时
+                if(!this.computeTime) {
+                    // 启动倒计时
+                    this.computeTime = 60
+                    this.intervalId = setInterval(() => {
+                        this.computeTime--
+                        if(this.computeTime<=0) {
+                            // 停止计时
+                            clearInterval(this.intervalId)
+                        }
+                    }, 1000)
 
-                function ispwd(str) {
-                    var reg = /^[\w+$]{6,}/
-                    // var reg = /=.*([a-zA-Z].*)(?=.*[0-9].*)[a-zA-Z0-9-*/+.~.!@#$%^&*()]{6,}$/
-                    return reg.test(str)
-                }
-
-                if (this.form.username != "" && this.form.password != "") {
-                    if (isusn(this.form.username) && ispwd(this.form.password)) {
-                        request.post("/changAn/employee/login", this.form).then(res => {
-                            if (res.code === 1) {
-                                // alert("hh")
-                                this.$message({
-                                    type: 'success',
-                                    message: "successful login"
-                                })
-                                this.$router.push({path: '/employee'})  //页面跳转
-                            } else {
-                                this.$message({
-                                    type: 'error',
-                                    message: res.msg
-                                })
-                            }
-                        })
+                    // 发送ajax请求(向指定手机号发送验证码短信)
+                    const result = await reqSendCode(this.mail)
+                    if(result.code===1) {
+                        // 显示提示
+                        this.showAlert(result.msg)
+                        // 停止计时
+                        if(this.computeTime) {
+                            this.computeTime = 0
+                            clearInterval(this.intervalId)
+                            this.intervalId = undefined
+                        }
                     }
                 }
-            }
+            },
+
+            showAlert(alertText) {
+                this.alertShow = true
+                this.alertText = alertText
+            },
+            // 异步登陆
+            async login () {
+                let result
+                // 前台表单验证
+                if(this.loginWay) {  // 短信登陆
+                    const {rightPhone, mail, code} = this
+                    if(!this.rightPhone) {
+                        // 手机号不正确
+                        this.showAlert('邮箱不正确')
+                        return
+                    } else if(!/^\d{4}$/.test(code)) {
+                        // 验证必须是6位数字
+                        this.showAlert('验证必须是4位数字')
+                        return
+                    }
+                    // 发送ajax请求短信登陆
+                    result = await reqSmsLogin(mail, code)
+
+                } else {// 密码登陆
+                    const {rightPhone,mail,password} = this
+                    if(!this.rightPhone) {
+                        // 用户名必须指定
+                        this.showAlert('邮箱不正确')
+                        return
+                    } else if(!this.password) {
+                        // 密码必须指定
+                        this.showAlert('密码必须填写')
+                        return
+                    }
+                    // 发送ajax请求密码登陆
+                    result = await reqPwdLogin({mail,password})
+                }
+
+                // 停止计时
+                if(this.computeTime) {
+                    this.computeTime = 0
+                    clearInterval(this.intervalId)
+                    this.intervalId = undefined
+                }
+
+                // 根据结果数据处理
+                if(result.code===1) {
+                    const user = result.data
+                    // 将user保存到vuex的state
+                    this.$store.dispatch('recordUser', user)
+                    // 去个人中心界面
+                    this.$router.replace('/customer-person')
+                } else {
+
+                    // 显示警告提示
+                    const msg = result.msg
+                    this.showAlert(msg)
+                }
+            },
+            // 关闭警告框
+            closeTip () {
+                this.alertShow = false
+                this.alertText = ''
+            },
+
+        },
+
+        components: {
+            AlertTip
         }
     }
 </script>
 
-<style scoped="scoped">
-    .login-register{
-        /*background-image: linear-gradient(to bottom right,#CCFBFF, #EF96C5);*/
-        background-color: #f0f0f0;
-        width: 100vw;
-        height: 100vh;
-    }
-    .contain{
-        width: 80%;
-        height: 35%;
-        position: relative;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 0 0 3px #f0f0f0,
-        0 0 6px #f0f0f0;
-    }
-    .big-box{
-        width: 70%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 15%;
-        transform: translateX(0%);
-        transition: all 1s;
-    }
-    .big-contain{
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-    .btitle{
-        font-size: 1.5em;
-        font-weight: bold;
-        color: rgb(57,167,176)
-    }
-    .bform{
-        width: 100%;
-        height: 50%;
-        padding: 1em 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-    }
-    .bform .errTips{
-        display: block;
-        width: 50%;
-        text-align: left;
-        color: red;
-        font-size: 0.7em;
-        margin-left: 1em;
-    }
-    .bform input{
-        width: 85%;
-        height: 120px;
-        border: none;
-        outline: none;
-        border-radius: 2px;
-        padding-left: 2em;
-        background-color: #f0f0f0;
-    }
-    .bbutton{
-        width: 40%;
-        height: 40px;
-        border-radius: 24px;
-        border: none;
-        outline: none;
-        background-color: rgb(57,167,176);
-        color: #fff;
-        font-size: 0.9em;
-        cursor: pointer;
-    }
-    .ffont{
-        border: none;
-        outline: none;
-        font-size: 0.8em;
-        color: rgb(57,167,176);
-        background-color: white;
-    }
-    .stitle{
-        font-size: 1.5em;
-        font-weight: bold;
-        color: #fff;
-    }
-    .scontent{
-        font-size: 0.8em;
-        color: #fff;
-        text-align: center;
-        padding: 2em 4em;
-        line-height: 1.7em;
-    }
-    .sbutton{
-        width: 60%;
-        height: 40px;
-        border-radius: 24px;
-        border: 1px solid #fff;
-        outline: none;
-        background-color: transparent;
-        color: #fff;
-        font-size: 0.9em;
-        cursor: pointer;
-    }
+<style lang="stylus" rel="stylesheet/stylus">
+    @import "../assets/stylus/mixins.styl"
+    .loginContainer
+        width 100%
+        height 100%
+        background #fff
+        .loginInner
+            padding-top 60px
+            width 80%
+            margin 0 auto
+            .login_header
+                .login_logo
+                    font-size 40px
+                    font-weight bold
+                    color #02a774
+                    text-align center
+                .login_header_title
+                    padding-top 40px
+                    text-align center
+                    >a
+                        color #333
+                        font-size 14px
+                        padding-bottom 4px
+                        &:first-child
+                            margin-right 40px
+                        &.on
+                            color #02a774
+                            font-weight 700
+                            border-bottom 2px solid #02a774
+            .login_content
+                >form
+                    >div
+                        display none
+                        &.on
+                            display block
+                        input
+                            width 100%
+                            height 100%
+                            padding-left 10px
+                            box-sizing border-box
+                            border 1px solid #ddd
+                            border-radius 4px
+                            outline 0
+                            font 400 14px Arial
+                            &:focus
+                                border 1px solid #02a774
+                        .login_message
+                            position relative
+                            margin-top 16px
+                            height 48px
+                            font-size 14px
+                            background #fff
+                            .get_verification
+                                position absolute
+                                top 50%
+                                right 10px
+                                transform translateY(-50%)
+                                border 0
+                                color #ccc
+                                font-size 14px
+                                background transparent
+                                &.right_phone
+                                    color black
+                        .login_verification
+                            position relative
+                            margin-top 16px
+                            height 48px
+                            font-size 14px
+                            background #fff
+                            .switch_button
+                                font-size 12px
+                                border 1px solid #ddd
+                                border-radius 8px
+                                transition background-color .3s,border-color .3s
+                                padding 0 6px
+                                width 30px
+                                height 16px
+                                line-height 16px
+                                color #fff
+                                position absolute
+                                top 50%
+                                right 10px
+                                transform translateY(-50%)
+                                &.off
+                                    background #fff
+                                    .switch_text
+                                        float right
+                                        color #ddd
+                                &.on
+                                    background #02a774
+                                >.switch_circle
+                                    position absolute
+                                    top -1px
+                                    left -1px
+                                    width 16px
+                                    height 16px
+                                    border 1px solid #ddd
+                                    border-radius 50%
+                                    background #fff
+                                    box-shadow 0 2px 4px 0 rgba(0,0,0,.1)
+                                    transition transform .3s
+                                    &.right
+                                        transform translateX(30px)
+                        .login_hint
+                            margin-top 12px
+                            color #999
+                            font-size 14px
+                            line-height 20px
+                            >a
+                                color #02a774
+                    .login_submit
+                        display block
+                        width 100%
+                        height 42px
+                        margin-top 30px
+                        border-radius 4px
+                        background #4cd96f
+                        color #fff
+                        text-align center
+                        font-size 16px
+                        line-height 42px
+                        border 0
+                .about_us
+                    display block
+                    font-size 12px
+                    margin-top 20px
+                    text-align center
+                    color #999
+            .go_back
+                position absolute
+                top 5px
+                left 5px
+                width 30px
+                height 30px
+                >.iconfont
+                    font-size 20px
+                    color #999
 </style>
-
-<!--<template>-->
-<!--    <div class="login-register">-->
-<!--        <div class="contain">-->
-<!--            <div class="big-box" :class="{active:isLogin}">-->
-<!--                <div class="big-contain" key="bigContainLogin" v-if="isLogin">-->
-<!--                    <div class="btitle">账户登录</div>-->
-<!--                    <div class="bform">-->
-<!--                        <input type="email" placeholder="邮箱" v-model="form.useremail">-->
-<!--                        <span class="errTips" v-if="emailError">* 邮箱填写错误 *</span>-->
-<!--                        <input type="password" placeholder="密码" v-model="form.userpwd">-->
-<!--                        <span class="errTips" v-if="emailError">* 密码填写错误 *</span>-->
-<!--                    </div>-->
-<!--                    <button class="bbutton" @click="login">登录</button>-->
-<!--                </div>-->
-<!--                <div class="big-contain" key="bigContainRegister" v-else>-->
-<!--                    <div class="btitle">创建账户</div>-->
-<!--                    <div class="bform">-->
-<!--                        <input type="text" placeholder="用户名" v-model="form.username">-->
-<!--                        <span class="errTips" v-if="existed">* 用户名已经存在！ *</span>-->
-<!--                        <input type="email" placeholder="邮箱" v-model="form.useremail">-->
-<!--                        <input type="password" placeholder="密码" v-model="form.userpwd">-->
-<!--                    </div>-->
-<!--                    <button class="bbutton" @click="register">注册</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="small-box" :class="{active:isLogin}">-->
-<!--                <div class="small-contain" key="smallContainRegister" v-if="isLogin">-->
-<!--                    <div class="stitle">你好，朋友!</div>-->
-<!--                    <p class="scontent">开始注册，和我们一起旅行</p>-->
-<!--                    <button class="sbutton" @click="changeType">注册</button>-->
-<!--                </div>-->
-<!--                <div class="small-contain" key="smallContainLogin" v-else>-->
-<!--                    <div class="stitle">欢迎回来!</div>-->
-<!--                    <p class="scontent">与我们保持联系，请登录你的账户</p>-->
-<!--                    <button class="sbutton" @click="changeType">登录</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--    export default{-->
-<!--        name:'login-register',-->
-<!--        data(){-->
-<!--            return {-->
-<!--                isLogin:false,-->
-<!--                emailError: false,-->
-<!--                passwordError: false,-->
-<!--                existed: false,-->
-<!--                form:{-->
-<!--                    username:'',-->
-<!--                    useremail:'',-->
-<!--                    userpwd:''-->
-<!--                }-->
-<!--            }-->
-<!--        },-->
-<!--        methods:{-->
-<!--            changeType() {-->
-<!--                this.isLogin = !this.isLogin-->
-<!--                this.form.username = ''-->
-<!--                this.form.useremail = ''-->
-<!--                this.form.userpwd = ''-->
-<!--            },-->
-<!--            login() {-->
-<!--                const self = this;-->
-<!--                if (self.form.useremail != "" && self.form.userpwd != "") {-->
-<!--                    self.$axios({-->
-<!--                        method:'post',-->
-<!--                        url: 'http://127.0.0.1:10520/api/user/login',-->
-<!--                        data: {-->
-<!--                            email: self.form.useremail,-->
-<!--                            password: self.form.userpwd-->
-<!--                        }-->
-<!--                    })-->
-<!--                        .then( res => {-->
-<!--                            switch(res.data){-->
-<!--                                case 0:-->
-<!--                                    alert("登陆成功！");-->
-<!--                                    break;-->
-<!--                                case -1:-->
-<!--                                    this.emailError = true;-->
-<!--                                    break;-->
-<!--                                case 1:-->
-<!--                                    this.passwordError = true;-->
-<!--                                    break;-->
-<!--                            }-->
-<!--                        })-->
-<!--                        .catch( err => {-->
-<!--                            console.log(err);-->
-<!--                        })-->
-<!--                } else{-->
-<!--                    alert("填写不能为空！");-->
-<!--                }-->
-<!--            },-->
-<!--            register(){-->
-<!--                const self = this;-->
-<!--                if(self.form.username != "" && self.form.useremail != "" && self.form.userpwd != ""){-->
-<!--                    self.$axios({-->
-<!--                        method:'post',-->
-<!--                        url: 'http://127.0.0.1:10520/api/user/add',-->
-<!--                        data: {-->
-<!--                            username: self.form.username,-->
-<!--                            email: self.form.useremail,-->
-<!--                            password: self.form.userpwd-->
-<!--                        }-->
-<!--                    })-->
-<!--                        .then( res => {-->
-<!--                            switch(res.data){-->
-<!--                                case 0:-->
-<!--                                    alert("注册成功！");-->
-<!--                                    this.login();-->
-<!--                                    break;-->
-<!--                                case -1:-->
-<!--                                    this.existed = true;-->
-<!--                                    break;-->
-<!--                            }-->
-<!--                        })-->
-<!--                        .catch( err => {-->
-<!--                            console.log(err);-->
-<!--                        })-->
-<!--                } else {-->
-<!--                    alert("填写不能为空！");-->
-<!--                }-->
-<!--            }-->
-<!--        }-->
-<!--    }-->
-<!--</script>-->
-
-<!--<style scoped="scoped">-->
-<!--    .login-register{-->
-<!--        width: 100vw;-->
-<!--        height: 100vh;-->
-<!--        box-sizing: border-box;-->
-<!--    }-->
-<!--    .contain{-->
-<!--        width: 60%;-->
-<!--        height: 60%;-->
-<!--        position: relative;-->
-<!--        top: 50%;-->
-<!--        left: 50%;-->
-<!--        transform: translate(-50%,-50%);-->
-<!--        background-color: #fff;-->
-<!--        border-radius: 20px;-->
-<!--        box-shadow: 0 0 3px #f0f0f0,-->
-<!--        0 0 6px #f0f0f0;-->
-<!--    }-->
-<!--    .big-box{-->
-<!--        width: 70%;-->
-<!--        height: 100%;-->
-<!--        position: absolute;-->
-<!--        top: 0;-->
-<!--        left: 30%;-->
-<!--        transform: translateX(0%);-->
-<!--        transition: all 1s;-->
-<!--    }-->
-<!--    .big-contain{-->
-<!--        width: 100%;-->
-<!--        height: 100%;-->
-<!--        display: flex;-->
-<!--        flex-direction: column;-->
-<!--        justify-content: center;-->
-<!--        align-items: center;-->
-<!--    }-->
-<!--    .btitle{-->
-<!--        font-size: 1.5em;-->
-<!--        font-weight: bold;-->
-<!--        color: rgb(57,167,176);-->
-<!--    }-->
-<!--    .bform{-->
-<!--        width: 100%;-->
-<!--        height: 40%;-->
-<!--        padding: 2em 0;-->
-<!--        display: flex;-->
-<!--        flex-direction: column;-->
-<!--        justify-content: space-around;-->
-<!--        align-items: center;-->
-<!--    }-->
-<!--    .bform .errTips{-->
-<!--        display: block;-->
-<!--        width: 50%;-->
-<!--        text-align: left;-->
-<!--        color: red;-->
-<!--        font-size: 0.7em;-->
-<!--        margin-left: 1em;-->
-<!--    }-->
-<!--    .bform input{-->
-<!--        width: 50%;-->
-<!--        height: 30px;-->
-<!--        border: none;-->
-<!--        outline: none;-->
-<!--        border-radius: 10px;-->
-<!--        padding-left: 2em;-->
-<!--        background-color: #f0f0f0;-->
-<!--    }-->
-<!--    .bbutton{-->
-<!--        width: 20%;-->
-<!--        height: 40px;-->
-<!--        border-radius: 24px;-->
-<!--        border: none;-->
-<!--        outline: none;-->
-<!--        background-color: rgb(57,167,176);-->
-<!--        color: #fff;-->
-<!--        font-size: 0.9em;-->
-<!--        cursor: pointer;-->
-<!--    }-->
-<!--    .small-box{-->
-<!--        width: 30%;-->
-<!--        height: 100%;-->
-<!--        background: linear-gradient(135deg,rgb(57,167,176),rgb(56,183,145));-->
-<!--        position: absolute;-->
-<!--        top: 0;-->
-<!--        left: 0;-->
-<!--        transform: translateX(0%);-->
-<!--        transition: all 1s;-->
-<!--        border-top-left-radius: inherit;-->
-<!--        border-bottom-left-radius: inherit;-->
-<!--    }-->
-<!--    .small-contain{-->
-<!--        width: 100%;-->
-<!--        height: 100%;-->
-<!--        display: flex;-->
-<!--        flex-direction: column;-->
-<!--        justify-content: center;-->
-<!--        align-items: center;-->
-<!--    }-->
-<!--    .stitle{-->
-<!--        font-size: 1.5em;-->
-<!--        font-weight: bold;-->
-<!--        color: #fff;-->
-<!--    }-->
-<!--    .scontent{-->
-<!--        font-size: 0.8em;-->
-<!--        color: #fff;-->
-<!--        text-align: center;-->
-<!--        padding: 2em 4em;-->
-<!--        line-height: 1.7em;-->
-<!--    }-->
-<!--    .sbutton{-->
-<!--        width: 60%;-->
-<!--        height: 40px;-->
-<!--        border-radius: 24px;-->
-<!--        border: 1px solid #fff;-->
-<!--        outline: none;-->
-<!--        background-color: transparent;-->
-<!--        color: #fff;-->
-<!--        font-size: 0.9em;-->
-<!--        cursor: pointer;-->
-<!--    }-->
-
-<!--    .big-box.active{-->
-<!--        left: 0;-->
-<!--        transition: all 0.5s;-->
-<!--    }-->
-<!--    .small-box.active{-->
-<!--        left: 100%;-->
-<!--        border-top-left-radius: 0;-->
-<!--        border-bottom-left-radius: 0;-->
-<!--        border-top-right-radius: inherit;-->
-<!--        border-bottom-right-radius: inherit;-->
-<!--        transform: translateX(-100%);-->
-<!--        transition: all 1s;-->
-<!--    }-->
-<!--</style>-->

@@ -5,6 +5,8 @@
 </template>
 
 <script>
+  import {reqFoodTypes} from "@/api";
+
   export default {
     name:"App"
   }

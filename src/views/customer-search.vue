@@ -16,7 +16,7 @@
     <section class="search">
         <HeaderTop title="搜索"/>
         <form class="search_form" @submit.prevent="search">
-            <input type="search" placeholder="请输入商家名称" class="search_input" v-model="keyword">
+            <input type="search" placeholder="请输入食品名称" class="search_input" v-model="keyword">
             <input type="submit" class="search_submit">
         </form>
         <section class="list" v-if="!noSearchShops">
@@ -92,7 +92,7 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
-    @import "../../common/stylus/mixins.styl"
+    @import "../assets/stylus/mixins.styl"
     .search
         width 100%
         height 100%

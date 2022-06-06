@@ -2,10 +2,9 @@
     <div class="food" v-if="isShow">
         <div class="food-content">
             <div class="image-header">
-                <!--使用上图片懒加载，就会在图片加载出来之前有个指定的loading效果-->
                 <img v-lazy="food.image">
                 <p class="foodpanel-desc">{{food.info}}</p>
-                <div class="back" @click="closeTip">
+                <div class="back" @click="toggleShow">
                     <i class="iconfont icon-arrow_left"></i>
                 </div>
             </div>
@@ -13,7 +12,6 @@
                 <h1 class="title">{{food.name}}</h1>
                 <div class="detail">
                     <span class="sell-count">月售{{food.sellCount}}份</span>
-                    <span class="rating">好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
                     <span class="now">￥{{food.price}}</span>
@@ -24,42 +22,40 @@
                 </div>
             </div>
         </div>
-        <div class="food-cover" @click="closeTip"></div>
+        <div class="food-cover" @click="toggleShow"></div>
     </div>
 </template>
 
-<script type='es6'>
-    import CartControl from '../components/CartControl'
+
+<script>
+    import CartControl from './CartControl'
+
     export default {
         props: {
             food: Object
         },
+
         data () {
             return {
                 isShow: false
             }
         },
+
+        methods: {
+            toggleShow () {
+                this.isShow = !this.isShow
+            }
+        },
+
         components: {
             CartControl
-        },
-        methods: {
-            closeTip () {
-                // 方法一：
-                // this.$emit('closeTip')
-
-                // 方法二
-                this.isShow = false
-            },
-            showTip () {
-                this.isShow = true
-            }
         }
-
     }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
     @import "../assets/stylus/mixins.styl"
+
     .food
         position: fixed
         left: 0
@@ -169,6 +165,6 @@
             bottom -48px
             left 0
             z-index 55
-            //background-color rgba(0, 0, 0, 0.5)
+            background-color rgba(0, 0, 0, 0.5)
 
 </style>
