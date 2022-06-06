@@ -86,7 +86,7 @@ export default {
   name: "ManagerPerson",
   data(){
     return{
-      managerImg:require("../assets/image/lxx.jpg"),
+      managerImg:'',
       managerName:'刘璇',
       managerNum:'04193016',
       managerIdentity:'老板娘',

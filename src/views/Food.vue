@@ -564,7 +564,6 @@
             },
             // 获取菜品分类
             getDishList () {
-                console.log('ok')
                 request.get('/changAn/category/list',{
                     params:{
                         type:1
