@@ -46,7 +46,8 @@
                 //用户名：4~8，字母，数字
                 //密码：字母数字下划线，不少于6位
                 function isusn(str) {
-                    var reg = /^(?![0-9]+$(?![a-zA-Z]+$)[0-9a-zA-Z]{2,8}$)/
+                    var reg = /[a-zA-Z0-9]{2,8}/
+                    console.log(reg.test(str))
                     return reg.test(str)
                 }
                 function ispwd(str) {
@@ -74,27 +75,6 @@
                                 })
                             }
                         })
-                        // this.logging = false
-                        // let {msg,code,data} = data
-                        // if (code != 200){
-                        //     this.$message({
-                        //         message : msg,
-                        //         type:error
-                        //     })
-                        // }else{
-                        //     if(self.data.code=1){
-                        //         sessionStorage.setItem("user",JSON.stringify(user))
-                        //         this.$router.push({ path:'/Employee'})
-                        //     }else if (user.type ==='advert'){
-                        //         sessionStorage.setItem("user",JSON.stringify(user))
-                        //         this.$router.push({ path:'/Dish'})
-                        //     }
-                        // }
-                        //             })
-                        //             .catch( err => {
-                        //                 console.log(err);
-                        //                 // console.log("登录失败")
-                        //             })
                     } else {
                         alert("请准确填写\n用户名：2~8位字母数字\n密码：6~12位，由字母数字下划线组成");
                     }
