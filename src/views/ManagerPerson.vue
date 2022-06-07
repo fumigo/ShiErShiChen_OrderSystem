@@ -6,11 +6,11 @@
       </div>
       <div  style="width: 22%;margin: 20px 0px;">
         <div style="margin: 25px 0;font-size: 20px;color: #f0f0f0;font-weight: bold">
-          <p style="margin: 15px 0">姓名:<span >{{managerName}}</span></p>
-          <p style="margin: 15px 0">工号:<span >{{managerNum}}</span></p>
-          <p style="margin: 15px 0">身份:<span >{{managerIdentity}}</span></p>
-          <p style="margin: 15px 0">电话:<span >{{managerPhone}}</span></p>
-          <p style="margin: 15px 0">邮箱:<span >{{managerEmail}}</span></p>
+          <p style="margin: 15px 0">姓名:<span >{{name}}</span></p>
+          <p style="margin: 15px 0">工号:<span >{{username}}</span></p>
+          <p style="margin: 15px 0">职能:<span >{{role}}</span></p>
+          <p style="margin: 15px 0">性别:<span >{{sex}}</span></p>
+          <p style="margin: 15px 0">电话:<span >{{phone}}</span></p>
 
         </div>
 
@@ -82,16 +82,18 @@
 </template>
 
 <script>
+import request from "../../utils/request";
+
 export default {
   name: "ManagerPerson",
   data(){
     return{
       managerImg:'',
-      managerName:'刘璇',
-      managerNum:'04193016',
-      managerIdentity:'老板娘',
-      managerPhone:'15929068966',
-      managerEmail:'3199432593@qq.com',
+      name:'刘璇',
+      username:'04193016',
+      role:'老板娘',
+      sex:'女',
+      phone:'15929068966',
 
       orderNum:423,
       userNum:342,
@@ -127,8 +129,60 @@ export default {
       },
       ]
 
-
-
+    }
+  },
+  created() {
+    this.loadPerson()
+    this.loadOrderNum()
+    this.loadFoodNum()
+  },
+  methods:{
+    loadPerson(){
+      let user = localStorage.setItem('userInfo') || '{}'
+      if(user === '{}'){
+        this.$message.error("还没有登录")
+      }else {
+        let username = JSON.parse(localStorage.setItem('userInfo')).username
+        request.get('/changAn/employee/page',{
+          params:{
+            page:'1',
+            pageSize:'5',
+            search:username,
+          }
+        }).then(res=>{
+          console.log(res);
+          this.name = res.data.records[0].name;
+          this.username = res.data.records[0].username;
+          this.role = res.data.records[0].role;
+          this.sex = res.data.records[0].sex;
+          this.phone = res.data.records[0].phone;
+          // this.total=res.data.total;
+        })
+      }
+    },
+    loadOrderNum(){
+      request.get('/changAn/order/page', {
+        params: {
+          page: "1",
+          pageSize: "1000",
+          search: "",
+        }
+      }).then(res => {
+        console.log(res);
+        this.orderNum = res.data.records.length;
+      })
+    },
+    loadFoodNum(){
+      request.get('/changAn/dish/page', {
+        params: {
+          page: "1",
+          pageSize: "1000",
+          search: "",
+        }
+      }).then(res => {
+        console.log(res);
+        this.foodNum = res.data.records.length;
+      })
     }
   }
 }
