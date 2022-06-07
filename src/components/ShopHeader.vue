@@ -1,14 +1,20 @@
 <template>
     <div class="shop-header">
-        <nav class="shop-nav" :style="{backgroundImage: `url(../assets/image/dessert/dessert1.jpg)`}">
+        <nav class="shop-nav" :style="{backgroundImage:  `url(${bgImg})`}">
 
         </nav>
     </div>
 </template>
 
 <script>
+    import bgimg from '../assets/image/dessert/dessert1.jpg';
     export default {
         name: "ShopHeader.vue",
+        data(){
+            return{
+                bgImg:bgimg,
+            }
+        }
     }
 </script>
 
@@ -21,10 +27,11 @@
         background #fff
         color #fff
         overflow hidden
+
     .shop-nav
         background-size cover
         background-repeat no-repeat
-        height 40px
+        height 100px
         padding 5px 10px
         position relative
         &::before

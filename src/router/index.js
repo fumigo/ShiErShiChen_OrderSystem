@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import layout from '../layout/layout.vue'
-
+import customer_Store from '../views/customer-store.vue'
 
 const routes = [
   {
@@ -75,20 +75,11 @@ const routes = [
     name: 'customer-pay',
     component: () => import( '../views/customer-pay.vue')
   },
-  {
-    path: '/customer-store',
-    name: 'customer-store',
-    component: () => import( '../views/customer-store.vue')
-  },
+
   {
     path: '/customer-order',
     name: 'customer-order',
     component: () => import( '../views/customer-order.vue')
-  },
-  {
-    path: '/customer-store',
-    name: 'customer-store',
-    component: () => import( '../views/customer-store')
   },
   {
     path: '/customer-delivery',
@@ -99,7 +90,20 @@ const routes = [
     path: '/customer-search',
     name: 'customer-search',
     component: () => import( '../views/customer-search.vue')
-  }
+  },
+
+    //到店点餐路由
+  {
+    path: '/customer-store',
+    redirect: '/customer-store/goods',
+    component: customer_Store,
+    children: [
+      {
+        path: '/customer-store/goods',
+        component: () => import( '../views/ShopGoods.vue')
+      },
+    ]
+  },
 ]
 
 const router = createRouter({

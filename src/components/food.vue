@@ -12,6 +12,7 @@
                 <h1 class="title">{{food.name}}</h1>
                 <div class="detail">
                     <span class="sell-count">月售{{food.sellCount}}份</span>
+                    <span class="rating">好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
                     <span class="now">￥{{food.price}}</span>
@@ -26,15 +27,16 @@
     </div>
 </template>
 
-
 <script>
-    import CartControl from './CartControl'
+
+
+    import CartControl from "@/components/CartControl";
 
     export default {
+        name: "food.vue",
         props: {
             food: Object
         },
-
         data () {
             return {
                 isShow: false
@@ -50,6 +52,7 @@
         components: {
             CartControl
         }
+
     }
 </script>
 
