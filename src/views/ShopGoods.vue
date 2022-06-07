@@ -7,44 +7,41 @@
                     <li class="menu-item" v-for="(good, index) in category_list" :key="index"
                         @click="clickMenuItem(index)">
                         <span class="text bottom-border-1px">
-            <!--              <img class="icon" :src="category_list.icon" v-if="good.icon">-->
-                          {{category_list.name}}
+                          <img class="icon" :src="category_list.icon" v-if="good.icon">
+                          {{good.name}}
                         </span>
                     </li>
                 </ul>
             </div>
-<!--            <div class="foods-wrapper">{{category_list}}</div>-->
 
-<!--            <div class="foods-wrapper">-->
+            <div class="foods-wrapper">
 <!--                <ul ref="foodsUl">-->
-<!--                    <li class="food-list-hook" v-for="(good, index) in goods" :key="index">-->
-<!--                        <h1 class="title">{{good.name}}</h1>-->
-<!--                        <ul>-->
-<!--                            <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods"-->
-<!--                                :key="index" @click="showFood(food)">-->
-<!--                                <div class="icon">-->
-<!--                                    <img width="57" height="57" :src="food.icon">-->
-<!--                                </div>-->
-<!--                                <div class="content">-->
-<!--                                    <h2 class="name">{{food.name}}</h2>-->
-<!--                                    <p class="desc">{{food.description}}</p>-->
+<!--                    <li class="food-list-hook" v-for="(item, index) in foods" :key="index">-->
+<!--&lt;!&ndash;                        <h1 class="title">{{good.name}}</h1>&ndash;&gt;-->
+                        <ul>
+                            <li class="food-item bottom-border-1px" v-for="(item, index) in foods"
+                                :key="index" @click="showFood(item)">
+                                <div class="icon">
+                                    <img width="57" height="57" :src="item.image">
+                                </div>
+                                <div class="content">
+                                    <h2 class="name">{{item.name}}</h2>
+                                    <p class="desc">{{item.description}}</p>
 <!--                                    <div class="extra">-->
 <!--                                        <span class="count">月售{{food.sellCount}}份</span>-->
 <!--                                        <span>好评率{{food.rating}}%</span>-->
 <!--                                    </div>-->
-<!--                                    <div class="price">-->
-<!--                                        <span class="now">￥{{food.price}}</span>-->
+                                    <div class="price">
+                                        <span class="now">￥{{item.price}}</span>
 <!--                                        <span class="old" v-if="food.oldPrice">￥{{food.oldPrice}}</span>-->
+                                    </div>
+<!--                                    <div class="cartcontrol-wrapper">-->
+<!--                                        <CartControl :food="food"/>-->
 <!--                                    </div>-->
-<!--&lt;!&ndash;                                    <div class="cartcontrol-wrapper">&ndash;&gt;-->
-<!--&lt;!&ndash;                                        <CartControl :food="food"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
-<!--                                </div>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </div>-->
+                                </div>
+                            </li>
+                        </ul>
+            </div>
 <!--            <ShopCart />-->
         </div>
 <!--        <Food :food="food" ref="food"/>-->
@@ -56,7 +53,7 @@
     import CartControl from "@/components/CartControl";
     import Food from '@/components/food';
     import ShopCart from "@/components/ShopCart";
-    import {mapState} from "vuex";
+    import {mapActions, mapState} from "vuex";
 
     export default {
         name: "ShopGoods.vue",
@@ -79,11 +76,10 @@
                     // this._initScroll()
                     // this._initTops()
                 })
-            })
-            // this.$store.dispatch('getShopGoods'）
+            });
         },
         computed: {
-            ...mapState(['category_list']),
+            ...mapState(['category_list','foods']),
 
             // // 计算得到当前分类的下标
             // currentIndex() {// 初始和相关数据发生了变化
@@ -100,6 +96,9 @@
         },
 
         methods: {
+
+            // ...mapActions([`getShopFoods`]),
+
             // 初始化滚动
             _initScroll() {
                 // 列表显示之后创建
@@ -142,24 +141,25 @@
                 console.log(tops)
             },
 
-            // clickMenuItem(index) {
-            //     // console.log(index)
-            //     // 使用右侧列表滑动到对应的位置
-            //
-            //     // 得到目标位置的scrollY
-            //     const scrollY = this.tops[index]
-            //     // 立即更新scrollY(让点击的分类项成为当前分类)
-            //     this.scrollY = scrollY
-            //     // 平滑滑动右侧列表
-            //     this.foodsScroll.scrollTo(0, -scrollY, 300)
-            // },
+            clickMenuItem(index) {
+                this.$store.dispatch("getShopFoods", index);
+                // // console.log(index)
+                // // 使用右侧列表滑动到对应的位置
+                //
+                // // 得到目标位置的scrollY
+                // const scrollY = this.tops[index]
+                // // 立即更新scrollY(让点击的分类项成为当前分类)
+                // this.scrollY = scrollY
+                // // 平滑滑动右侧列表
+                // this.foodsScroll.scrollTo(0, -scrollY, 300)
+            },
 
             // 显示点击的food
             showFood (food) {
                 // 设置food
                 this.food = food
                 // 显示food组件 (在父组件中调用子组件对象的方法)
-                this.$refs.food.toggleShow()
+                // this.$refs.food.toggleShow()
             }
         },
     }

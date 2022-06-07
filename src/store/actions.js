@@ -8,6 +8,7 @@ import {
     RECEIVE_USER_INFO,
     RESET_USER_INFO,
     RECEIVE_GOODS,
+    RECEIVE_FOODS,
     // RECEIVE_RATINGS,
     // RECEIVE_INFO,
     INCREMENT_FOOD_COUNT,
@@ -116,7 +117,17 @@ export default {
             callback && callback()
         }
     },
-
+    // 异步获取类别食物列表
+    async getShopFoods({commit}, callback) {
+        const result = await reqShopFoods()
+        if (result.code === 1) {
+            const foods = result.data
+            // console.log(goods);
+            commit(RECEIVE_FOODS, {foods})
+            // 数据更新了, 通知一下组件
+            callback && callback()
+        }
+    },
     // 同步更新food中的count值
     updateFoodCount({commit}, {isAdd, food}) {
         if (isAdd) {

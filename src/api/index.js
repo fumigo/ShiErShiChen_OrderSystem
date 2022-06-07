@@ -39,5 +39,8 @@ export const reqLogout = () => ajax(BASE_URL+'/logout')
  * 获取商家商品类别数组
  */
 export const reqShopGoods = () => ajax('http://192.168.0.80:9090/changAn/category/list')
-
+/**
+ * 获取对应类别中食物数组
+ */
+export const reqShopFoods = (id) => ajax('http://192.168.0.80:9090/changAn/dish/list',{id})
 
