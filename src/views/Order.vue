@@ -39,38 +39,26 @@
     </div>
     <el-table
         ref="multipleTableRef"
-        :data="tableData"
+        :data="tableOrderData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
     >
 
-      <el-table-column type="expand">
-        <template #default="props">
-          <div style="margin-left: 100px;line-height: 25px" m="4">
-            <p m="t-0 b-2">菜1: {{ props.row.cai1 }}</p>
-            <p m="t-0 b-2">菜2: {{ props.row.cai2 }}</p>
-            <p m="t-0 b-2">菜3: {{ props.row.cai3 }}</p>
-            <p m="t-0 b-2">菜4: {{ props.row.cai4 }}</p>
-            <p m="t-0 b-2">备注: {{ props.row.beizhu}}</p>
-
-          </div>
-        </template>
-      </el-table-column>
 
       <el-table-column type="selection" width="55"/>
-      <el-table-column property="name" label="Name"/>
-      <el-table-column prop="tel" label="联系电话"/>
+      <el-table-column property="number" label="订单号" width="120"/>
+      <el-table-column property="name" label="收货人" width="100"/>
+      <el-table-column prop="tel" label="联系电话" width="120"/>
+      <el-table-column property="address" label="地址" width="250" show-overflow-tooltip/>
+      <el-table-column prop="pay" label="付款金额" width="100"/>
+      <el-table-column label="结账时间" prop="checkoutTime" width="200"/>
+      <el-table-column label="支付方式" prop="payMethod" width="100"/>
 
-      <el-table-column property="address" label="Address" show-overflow-tooltip/>
-      <el-table-column label="下单时间" prop="date1" sortable>
-      </el-table-column>
-      <el-table-column label="完成时间" prop="date2">
-      </el-table-column>
       <el-table-column
-          prop="tag"
+          prop="status"
           label="状态"
           :filters="[
-        { text: '未出餐', value: '未出餐' },
+        { text: '待出餐', value: '待出餐' },
         { text: '配送中', value: '配送中' },
         { text: '已送达', value: '已送达' },
       ]"
@@ -79,7 +67,7 @@
       >
         <template #default="scope" style="text-align: center">
           <el-tag
-              :type="scope.row.tag === '未出餐' ? 'error' : (scope.row.tag === '配送中' ? 'warning' : 'success')"
+              :type="scope.row.tag === '待出餐' ? 'error' : (scope.row.tag === '配送中' ? 'warning' : 'success')"
               disable-transitions
               style="text-align: center"
           >
@@ -93,7 +81,7 @@
               </span>
               <template #dropdown style="text-align: center">
                 <el-dropdown-menu style="margin: 0 auto ;text-align: center">
-                  <el-dropdown-item @click="imp('未出餐',scope.row)" style="margin: 0 auto">未出餐</el-dropdown-item>
+                  <el-dropdown-item @click="imp('待出餐',scope.row)" style="margin: 0 auto">待出餐</el-dropdown-item>
                   <el-dropdown-item @click="imp('配送中',scope.row)" style="margin: 0 auto">配送中</el-dropdown-item>
                   <el-dropdown-item @click="imp('已送达',scope.row)" style="margin: 0 auto">已送达</el-dropdown-item>
                 </el-dropdown-menu>
@@ -103,6 +91,14 @@
           </el-tag>
         </template>
       </el-table-column>
+
+      <el-table-column label="查看" width="220">
+        <template #default="scope">
+          <el-button size="small" type="primary" color="#71A4A3" bg="false"  style="color: #FFFFFF" @click="handleCheck(scope.row.number)"
+          >查看</el-button>
+        </template>
+      </el-table-column>
+
     </el-table>
     <div style="margin: 10px 0">
       <el-pagination
@@ -118,10 +114,33 @@
           @current-change="handleCurrentChange"
       />
     </div>
+
+
+    <el-dialog v-model="dialogVisible"
+               title="订单详情"
+               width="40%"
+    >
+
+      <el-table :data="tableOrderDetailData" stripe style="width: 100%">
+        <el-table-column prop="name" label="名字" width="180" />
+<!--        <el-table-column prop="image" label="图片" width="180" >-->
+<!--          <img :src="image" alt="">-->
+<!--        </el-table-column>-->
+        <el-table-column prop="dishFlavor" label="口味" />
+        <el-table-column prop="number" label="数量" />
+      </el-table>
+      <div style="width: 80%;height: 100px;border-top: #496C66 5px ">
+
+      </div>
+
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
+
+import request from "../../utils/request";
 
 export default {
   name: 'Order',
@@ -131,66 +150,68 @@ export default {
       value2:'',
       currentPage:1,
       total:10,
-      tableData: [
+      tableOrderData: [
         {
+          number:'1232524352',
           name: '王大花',
           tel: '15929067793',
           address: '安美公寓3518铁栅栏5号床',
-          date1: '2021-04-01',
-          date2: '2021-04-02',
-          tag: '已送达',
-          cai1: '黄焖鸡米饭',
-          cai2: '奶茶',
-          cai3: '水果',
-          cai4: '凉皮',
-          beizhu:'多辣辣辣辣辣辣辣辣辣辣'
+          pay:'66.66',
+          checkoutTime: '2021-04-01',
+          tag: '待出餐',
+          payMethod: '支付宝',
+          remark:'多辣辣辣辣辣'
 
 
         },
-        {
-          name: '俱臭肥',
-          tel: '18392047793',
-          address: '安美公寓3518铁栅栏6号床',
-          date1: '2020-04-02',
-          date2: '2020-04-02',
-          tag: '未出餐',
-          cai1: '黄焖鸡米饭',
-          cai2: '奶茶',
-          cai3: '水果',
-          cai4: '凉皮',
-          beizhu:'多辣辣辣辣辣辣辣辣辣辣'
-
-        },
-        {
-          name: '刘来风',
-          tel: '15977938966',
-          address: '安美公寓3518铁栅栏3号床',
-          date1: '2020-04-03',
-          date2: '2020-04-02',
-          tag: '已送达',
-          cai1: '黄焖鸡米饭',
-          cai2: '奶茶',
-          cai3: '水果',
-          cai4: '凉皮',
-          beizhu:'多辣辣辣辣辣辣辣辣辣辣'
-
-        },
-        {
-          name: '苗欢子',
-          tel: '13298505860',
-          address: '安美公寓3518铁栅栏4号床',
-          date1: '2020-04-04',
-          date2: '2020-04-02',
-          tag: '配送中',
-          cai1: '黄焖鸡米饭',
-          cai2: '奶茶',
-          cai3: '水果',
-          cai4: '凉皮',
-          beizhu:'多辣辣辣辣辣辣辣辣辣辣'
-        },]
+        // {
+        //   name: '俱臭肥',
+        //   tel: '18392047793',
+        //   address: '安美公寓3518铁栅栏6号床',
+        //   pay:'66.66',
+        //   date1: '2020-04-02',
+        //   date2: '2020-04-02',
+        //   tag: '未出餐',
+        //   cai1: '黄焖鸡米饭-奶茶-水果-凉皮',
+        //   beizhu:'多辣辣辣辣辣辣辣辣辣辣'
+        //
+        // },
+        // {
+        //   name: '刘来风',
+        //   tel: '15977938966',
+        //   address: '安美公寓3518铁栅栏3号床',
+        //   pay:'66.66',
+        //   date1: '2020-04-03',
+        //   date2: '2020-04-02',
+        //   tag: '已送达',
+        //   cai1: '黄焖鸡米饭-奶茶-水果-凉皮',
+        //   beizhu:'多辣辣辣辣辣辣辣辣辣辣'
+        //
+        // },
+        // {
+        //   name: '苗欢子',
+        //   tel: '13298505860',
+        //   address: '安美公寓3518铁栅栏4号床',
+        //   pay:'66.66',
+        //   date1: '2020-04-04',
+        //   date2: '2020-04-02',
+        //   tag: '配送中',
+        //   cai1: '黄焖鸡米饭-奶茶-水果-凉皮',
+        //   beizhu:'多辣辣辣辣辣辣辣辣辣辣'
+        // },
+      ],
+      tableOrderDetailData:[{
+        name:'陕西凉皮',
+        image:'',
+        dishFlavor:'变态辣',
+        number:'2'
+      }],
+      pageSize:5,
+      dialogVisible:false
     }
   },
   methods: {
+
     filterTag(value, row) {
       return row.tag === value
     },
@@ -200,14 +221,37 @@ export default {
     disabledDate(time){
       return time.getTime() > Date.now()
     },
-    handleSizeChange(){
-
-    },
+    handleSizeChange(){},
     handleCurrentChange(){
 
     },
     currentPage4(){
 
+    },
+
+    handleCheck(number){
+      this.dialogVisible = true
+      request.get('/changAn/orders/detail', {
+          orderId:number
+    }).then(res => {
+        console.log(res);
+        this.tableOrderDetailData = res.data.records;
+        this.total = res.data.total;
+      })
+    },
+
+    load() {
+      request.get('/changAn/orders/page', {
+        params: {
+          page: this.currentPage,
+          pageSize: this.pageSize,
+          search: this.search,
+        }
+      }).then(res => {
+        console.log(res);
+        this.tableOrderData = res.data.records;
+        this.total = res.data.total;
+      })
     },
 
   }
