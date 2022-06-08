@@ -20,7 +20,7 @@
 <!--    卡片-->
     <el-row :gutter="20" style="width: 98%;margin: 10px auto;border-radius: 20px;">
       <el-col :span="8">
-        <el-card shadow="hover" class="el-card" @click="$router.push('/order')">
+        <el-card shadow="hover" class="el-card">
           <div style="font-size: 20px">
             <span class="iconfont">&#xe897;</span>
             订单数量
@@ -31,18 +31,18 @@
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card shadow="hover" class="el-card" @click="$router.push('/order')">
+        <el-card shadow="hover" class="el-card">
           <div style="font-size: 20px">
             <span class="iconfont">&#xe6a5;</span>
-            用户数量
+            员工数量
           </div>
           <div class="num">
-            {{userNum}}
+            {{empNum}}
           </div>
         </el-card>
       </el-col>
       <el-col :span="8">
-        <el-card shadow="hover" class="el-card"  @click="$router.push('/food')">
+        <el-card shadow="hover" class="el-card" >
           <div style="font-size: 20px">
             <span class="iconfont">&#xe601;</span>
             菜品数量
@@ -97,7 +97,7 @@
 <!--排行-->
     <el-row :gutter="20" style="width: 98%;height: 290px;margin: 10px auto;border-radius: 20px;">
       <el-col :span="12">
-        <el-card shadow="hover" class="el-card" @click="$router.push('/order')">
+        <el-card shadow="hover" class="el-card" >
           <p style="font-size: 20px;border-bottom: #496C66 5px solid">菜品排行</p>
           <el-table :data="tableData1" style="width: 100%">
             <el-table-column prop="name" label="菜品名称" width="230" />
@@ -107,7 +107,7 @@
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card shadow="hover" class="el-card" @click="$router.push('/order')">
+        <el-card shadow="hover" class="el-card">
           <p style="font-size: 20px;border-bottom: #496C66 5px solid">套餐排行</p>
           <el-table :data="tableData2" style="width: 100%">
             <el-table-column prop="name" label="套餐名称" width="230" />
@@ -151,8 +151,8 @@ export default {
       phone:'',
 
       orderNum:423,
-      userNum:342,
-      foodNum:56,
+      empNum:'',
+      foodNum:'',
 
       dialogVisible:false,
 
@@ -192,6 +192,7 @@ export default {
     this.loadPerson()
     this.loadOrderNum()
     this.loadFoodNum()
+    this.loadEmpNum()
   },
   methods:{
     editConfirm(){
@@ -260,6 +261,18 @@ export default {
       }).then(res => {
         console.log(res);
         this.orderNum = res.data.records.length;
+      })
+      },
+    loadEmpNum(){
+      request.get('/changAn/employee/page', {
+        params: {
+          page: "1",
+          pageSize: "1000",
+          search: "",
+        }
+      }).then(res => {
+        console.log(res);
+        this.empNum = res.data.records.length;
       })
     },
     loadFoodNum(){
