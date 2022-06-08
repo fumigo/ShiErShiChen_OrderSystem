@@ -162,7 +162,7 @@
                     // 将user保存到vuex的state
                     this.$store.dispatch('recordUser', user)
                     // 去个人中心界面
-                    this.$router.replace('/customer-person')
+                    this.$router.replace('')
                 } else {
 
                     // 显示警告提示

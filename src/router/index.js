@@ -4,7 +4,7 @@ import customer_Store from '../views/customer-store.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/api',
     name: 'layout',
     component: layout,
     children:[
@@ -41,7 +41,7 @@ const routes = [
     ]
   },
   {
-    path: '/login',
+    path: '/',
     name: 'login',
     component: () => import( '../views/login.vue')
   },

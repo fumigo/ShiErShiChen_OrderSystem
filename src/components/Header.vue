@@ -61,7 +61,7 @@
                 //         })
                 //     }
                 // })
-                this.$router.push('/login');
+                this.$router.push('/');
             },
            load(){
                 //成功登录后在头部显示用户名

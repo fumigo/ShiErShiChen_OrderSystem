@@ -67,7 +67,7 @@
                                 //在本地缓存用户信息
                                 localStorage.setItem('userInfo',JSON.stringify(res.data));
                                 //页面跳转
-                                this.$router.push({path: '/employee'})
+                                this.$router.push({path: '/Food'})
                             } else {
                                 this.$message({
                                     type: 'error',

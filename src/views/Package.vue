@@ -157,6 +157,7 @@
                         title="添加菜品"
                         class="addDishList"
                         v-model="dialogVisibleFood"
+                        :visible.sync="dialogVisible"
                         width="60%"
                         :before-close="handleClose"
                 >
@@ -168,7 +169,7 @@
                         size="small"
                         clearable
                 >
-<!--                <i slot="prefix" class="el-input__icon el-icon-search" style="cursor: pointer" @click="seachHandle">哈哈</i>-->
+                <i slot="prefix" class="el-input__icon el-icon-search" style="cursor: pointer" @click="seachHandle">哈哈</i>
                 </el-input>
                 <el-button  color="#71A4A3" size="small" bg="false"  style="color: #FFFFFF;margin-left: 5px" @click="searchHandle()">搜索</el-button>
                     <!-- <AddDish ref="adddish" :check-list="checkList" :seach-key="seachKey" @checkList="getCheckList" /> -->
@@ -277,6 +278,8 @@
                 this.$router.push('/login');
             }
             this.load();
+            this.getDishTypeList()
+            this.getDishType()
         },
         computed: {
             rules () {
@@ -335,7 +338,7 @@
                         if (item.status === 1) {
                             item.status = '起售';
                         }
-                        // item.price=item.price/100;
+                         item.price=item.price/100;
                     }
                     this.total = res.data.total;
                 })
@@ -345,7 +348,7 @@
                 this.titleInfo = '新增套餐信息';
                 this.dialogFormVisible = true;
                 //添加分类时要先清空表格
-                this.form = {};
+                // this.form = {};
                 //清空图片上传列表
                 this.imageUrl = ``;
                 this.getDishTypeList();
@@ -362,11 +365,11 @@
                     // this.form.flavor = this.dishFlavors.map(obj => ({ ...obj, value: JSON.stringify(obj.value) }));
                     // delete this.form.dishFlavors;
 
-                    console.log(this.form);
+                    // console.log(this.form);
                     //更新
                     if (this.form.id) {
                         console.log(this.form);
-                        request.put('/changAn/dish', this.form).then(res => {
+                        request.put('/changAn/setMeal', this.form).then(res => {
                             console.log(res.data);
                             if (res.code === 1) {
                                 this.$message({
@@ -385,7 +388,7 @@
                     }
                     //新增
                     else {
-                        request.post('/changAn/dish', this.form).then(res => {
+                        request.post('/changAn/setMeal', this.form).then(res => {
                             console.log(res.data);
                             if (res.code === 1) {
                                 this.$message({
@@ -410,7 +413,7 @@
             handleEdit(row){
                 console.log(typeof row.id)
                 let id=row.id;
-                request.get('/changAn/dish/'+id).then(res=>{
+                request.get('/changAn/setMeal/'+id).then(res=>{
                     console.log(res);
                     this.form=res.data;
                     this.imageUrl = `/api/changAn/file/download?flag=${res.data.image}`;
@@ -439,7 +442,7 @@
                 }).then(() => {
                     let ids=type === '批量' ? this.checkList : id;
                     console.log(ids);
-                    request.delete('/changAn/dish/'+ids).then(res => {
+                    request.delete('/changAn/setMeal/'+ids).then(res => {
                         if (res.code === 1) {
                             this.$message.success('删除成功！')
                             this.load();
@@ -474,7 +477,7 @@
                     'type': 'warning'
                 }).then(() => {
                     // 起售停售---批量起售停售接口
-                    request.put('/changAn/dish/status/'+params.status,params.id).then(res => {
+                    request.put('/changAn/setMeal/status/'+params.status,params.id).then(res => {
                         if (res.code === 1) {
                             this.$message.success('菜品状态已经更改成功！')
                             this.load();
@@ -586,7 +589,7 @@
                 })
                 this.dialogVisibleFood = false
                 // 添加处理逻辑清空选中list
-                this.checkList = []
+                // this.checkList = []
             },
             // 获取菜品分类
             getDishType () {

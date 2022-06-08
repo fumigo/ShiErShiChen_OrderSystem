@@ -315,7 +315,7 @@
                         if (item.status === 1) {
                             item.status = '起售';
                         }
-                        // item.price=item.price/100;
+                         item.price=item.price/100;
                     }
                     this.total = res.data.total;
                 })
