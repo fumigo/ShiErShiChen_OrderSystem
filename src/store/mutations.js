@@ -11,6 +11,7 @@ import {
     // RECEIVE_INFO,
     // RECEIVE_RATINGS,
     RECEIVE_GOODS,
+    RECEIVE_FOODS,
     INCREMENT_FOOD_COUNT,
     DECREMENT_FOOD_COUNT,
     CLEAR_CART,
@@ -47,6 +48,11 @@ export default {
 
     [RECEIVE_GOODS](state, {goods}) {
         state.category_list =goods;
+        // console.log(typeof state.category_list);
+        // console.log(state.category_list);
+    },
+    [RECEIVE_FOODS](state, {foods}) {
+        state.foods =foods;
         // console.log(typeof state.category_list);
         // console.log(state.category_list);
     },

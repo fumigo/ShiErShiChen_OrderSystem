@@ -95,14 +95,7 @@ const routes = [
     //到店点餐路由
   {
     path: '/customer-store',
-    redirect: '/customer-store/goods',
     component: customer_Store,
-    children: [
-      {
-        path: '/customer-store/goods',
-        component: () => import( '../views/ShopGoods.vue')
-      },
-    ]
   },
 ]
 

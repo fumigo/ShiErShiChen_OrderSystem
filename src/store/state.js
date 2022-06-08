@@ -10,6 +10,7 @@ export default {
     userInfo: {}, // 用户信息
     goods: [], // 商品列表
     category_list:[],//新.菜品列表
+    foods:[],//菜列表
     // ratings: [], // 商家评价列表
     // info: {}, // 商家信息
     cartFoods: [], // 购物车中食物的列表
