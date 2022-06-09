@@ -85,7 +85,7 @@
                             <el-input v-model="form.name" />
                         </el-form-item>
                         <el-form-item label="套餐分类:" style="width: 350px;float:left" prop="idType" label-width="90px">
-                            <el-select v-model="form.idType" placeholder="请选择套餐分类" @change="$forceUpdate()">
+                            <el-select v-model="form.categoryId" placeholder="请选择套餐分类" @change="$forceUpdate()">
                                 <el-option v-for="(item, index) in setMealList" :key="index" :label="item.name" :value="item.id" />
                             </el-select>
                         </el-form-item>
@@ -102,10 +102,10 @@
                                             <el-table :data="dishTable" style="width: 100%">
                                                 <el-table-column prop="name" label="名称" width="180" align="center"></el-table-column>
                                                 <el-table-column prop="price" label="原价" width="180">
-                                                    <template slot-scope="scope"> {{ Number(scope.row.price) / 100 }} </template>
+                                                    <template #default="scope"> {{ Number(scope.row.price) / 100 }} </template>
                                                 </el-table-column>
                                                 <el-table-column prop="address" label="份数" align="center">
-                                                    <template slot-scope="scope">
+                                                    <template #default="scope">
                                                         <el-input-number
                                                                 v-model="scope.row.copies"
                                                                 size="small"
@@ -116,7 +116,7 @@
                                                     </template>
                                                 </el-table-column>
                                                 <el-table-column prop="address" label="操作" width="180px;" align="center">
-                                                    <template slot-scope="scope">
+                                                    <template #default="scope">
                                                         <el-button type="text" size="small" @click="delDishHandle(scope.$index)"> 删除 </el-button>
                                                     </template>
                                                 </el-table-column>
@@ -153,6 +153,8 @@
                       </span>
                     </template>
                 </el-dialog>
+
+<!--                添加菜品-->
                 <el-dialog
                         title="添加菜品"
                         class="addDishList"
@@ -251,9 +253,9 @@
                     'price': '',
                     'image': '',
                     'description': '',
-                    'dishList': [],
+                    'setMealDishList': [],
                     'status': true,
-                    'idType': '',
+                    // 'idType': '',
                 },
                 dishType: [],
                 dishAddList: [],
@@ -287,7 +289,7 @@
                     'name': [
                         {'required': true, 'message': '请填写菜品名称', 'trigger': 'blur'}
                     ],
-                    'idType': [
+                    'categoryId': [
                         {
                         required: true, message: '请选择套餐分类', trigger: 'change'}
                         ],
@@ -338,7 +340,7 @@
                         if (item.status === 1) {
                             item.status = '起售';
                         }
-                         item.price=item.price/100;
+                         item.price=item.price;
                     }
                     this.total = res.data.total;
                 })
@@ -348,7 +350,9 @@
                 this.titleInfo = '新增套餐信息';
                 this.dialogFormVisible = true;
                 //添加分类时要先清空表格
-                // this.form = {};
+                this.form = {};
+                //清空菜品
+                this.dishTable=[],
                 //清空图片上传列表
                 this.imageUrl = ``;
                 this.getDishTypeList();
@@ -358,9 +362,10 @@
                 })
             },
             save() {
-                if (this.form.name &&this.form.categoryId && this.form.sort&&this.form.price&&this.form.description&&this.form.image) {
+                if (this.form.name &&this.form.price&&this.form.description&&this.form.price&&this.form.categoryId) {
                     this.innerVisible = false;
                     this.form.price=parseInt(this.form.price);
+                        this.form.status=1;
                     // this.form.categoryId=Number(this.form.categoryId);
                     // this.form.flavor = this.dishFlavors.map(obj => ({ ...obj, value: JSON.stringify(obj.value) }));
                     // delete this.form.dishFlavors;
@@ -369,6 +374,7 @@
                     //更新
                     if (this.form.id) {
                         console.log(this.form);
+
                         request.put('/changAn/setMeal', this.form).then(res => {
                             console.log(res.data);
                             if (res.code === 1) {
@@ -417,6 +423,7 @@
                     console.log(res);
                     this.form=res.data;
                     this.imageUrl = `/api/changAn/file/download?flag=${res.data.image}`;
+                    // this.dishTable=res.data.setMealDishList;
                     // this.form.price =res.data.price/100;
                     // this.dishFlavors = res.data.flavor && res.data.flavor.map(obj => ({ ...obj, value: JSON.parse(obj.value),showOption: false }))
                 })
@@ -584,6 +591,8 @@
             // 保存添加菜品列表
             addTableList() {
                 this.dishTable = JSON.parse(JSON.stringify(this.checkList))
+                this.form.setMealDishList=this.dishTable;
+                // console.log("dishTable "+this.dishTable )
                 this.dishTable.forEach((n) => {
                     n.copies = 1
                 })

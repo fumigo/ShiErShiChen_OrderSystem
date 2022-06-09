@@ -39,11 +39,11 @@
                                     <span class="switch_text">{{showPwd ? 'abc' : '...'}}</span>
                                 </div>
                             </section>
-<!--                            <section class="login_message">-->
-<!--                                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">-->
-<!--                                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"-->
-<!--                                     @click="getCaptcha" ref="captcha">-->
-<!--                            </section>-->
+                            <!--                            <section class="login_message">-->
+                            <!--                                <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">-->
+                            <!--                                <img class="get_verification" src="http://localhost:4000/captcha" alt="captcha"-->
+                            <!--                                     @click="getCaptcha" ref="captcha">-->
+                            <!--                            </section>-->
                         </section>
                     </div>
                     <button class="login_submit">登录</button>

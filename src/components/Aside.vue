@@ -34,8 +34,8 @@
                     <template #title>员工管理</template>
                 </el-menu-item>
                 <el-menu-item index="6">
-                    <span class="iconfont">&#xe6a5;</span>
-                    <template #title>顾客管理</template>
+                    <span class="iconfont"></span>
+                    <template #title></template>
                 </el-menu-item>
                 <el-menu-item index="7">
 

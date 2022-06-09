@@ -1,5 +1,4 @@
 <template>
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <div class="login-register">
         <div class="contain">
             <div class="big-box" :class="{active:isLogin}">

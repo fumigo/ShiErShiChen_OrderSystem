@@ -500,7 +500,8 @@
                     window.top.location.href = 'login'
                 }else{
                     this.imageUrl = `/api/changAn/file/download?flag=${response.data}`
-                    this.form.image = response.data;
+                    // this.form.image = response.data;
+                    // this.form.image=`/api/changAn/file/download?flag=${response.data}`
                 }
             },
 
